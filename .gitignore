@@ -1,0 +1,16 @@
+.ICEauthority
+.bash_history
+.cache/
+.config/
+.dbus/
+.node_repl_history
+.python-history
+.ssh/
+.viminfo
+.wget-hsts
+.xfce4-session.verbose-log
+.xfce4-session.verbose-log.last
+get-pip.py
+photoboard-image-*
+..gitignore.un~
+.gitignore~

@@ -105,7 +105,7 @@ int main() try
     for (auto & captured : supported_streams)
     {
         std::stringstream ss;
-        ss << “photoboard-image-“ << captured.stream << ".png";
+        ss << "photoboard-image-" << captured.stream << ".png";
 
         std::cout << "Writing " << ss.str().data() << ", " << captured.intrinsics.width << " x " << captured.intrinsics.height << " pixels"   << std::endl;
 
