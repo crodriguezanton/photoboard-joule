@@ -166,24 +166,28 @@ int main() try
           for (auto & stream_record : supported_streams)
               stream_record.frame_data = const_cast<uint8_t *>((const uint8_t*)dev->get_frame_data(stream_record.stream));
 
+          printf("1");
           /* Transform Depth range map into color map */
           stream_record depth = supported_streams[(int)rs::stream::depth];
           std::vector<uint8_t> coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
-
+          printf("2");
           /* Encode depth data into color image */
           normalize_depth_to_rgb(coloredDepth.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
-
+          printf("3");
           /* Update captured data */
           supported_streams[(int)rs::stream::depth].frame_data = coloredDepth.data();
-
+          printf("4");
           /* Store captured frames into current directory */
           for (auto & captured : supported_streams)
           {
+              printf("5");
               std::stringstream ss;
               ss << "photoboard-image-" << captured.stream << ".png";
 
-              std::cout << "Writing " << ss.str().data() << ", " << captured.intrinsics.width << " x " << captured.intrinsics.height << " pixels"   << std::endl;
+              printf("6");
 
+              std::cout << "Writing " << ss.str().data() << ", " << captured.intrinsics.width << " x " << captured.intrinsics.height << " pixels"   << std::endl;
+              printf("7");
               stbi_write_png(ss.str().data(),
                   captured.intrinsics.width,captured.intrinsics.height,
                   components_map[captured.stream],
