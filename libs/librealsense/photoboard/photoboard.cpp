@@ -157,7 +157,6 @@ int main() try
         *out++ = 0;
         *out2++ = 0;
         *out3++ = 0;
-        ++i;
         std::system("clear");
         printf("\n%s", buffer);
         printf("\n%s", buffer2);
