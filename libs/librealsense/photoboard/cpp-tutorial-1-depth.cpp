@@ -44,7 +44,7 @@ int main() try
         // Print a simple text-based representation of the image, by breaking it into 10x20 pixel regions and and approximating the coverage of pixels within one meter
         char buffer[(640/10+1)*(480/20)+1];
         char buffer2[(640/80+1)*(480/80)+1];
-        char buffer2[(640/80+1)*(480/80)+1];
+        char buffer3[(640/80+1)*(480/80)+1];
         char * out = buffer;
         char * out2 = buffer2;
         char * out3 = buffer3;
