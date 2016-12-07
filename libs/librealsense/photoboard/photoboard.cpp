@@ -164,6 +164,7 @@ int main() try
 
           /* Retrieve data from all the enabled streams */
           for (auto & stream_record : supported_streams)
+              printf("iteration\n");
               stream_record.frame_data = const_cast<uint8_t *>((const uint8_t*)dev->get_frame_data(stream_record.stream));
 
           printf("1");
