@@ -82,6 +82,7 @@ int main() try
 
     dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
     dev->enable_stream(rs::stream::infrared, 640, 480, rs::format::z16, 30);
+    dev->enable_stream(rs::stream::infrared2, 640, 480, rs::format::z16, 30);
 
 
     dev->start();
