@@ -101,7 +101,9 @@ int main() try
         printf("\n\n%s", buffer3);
 
         if (changed){
+          dev->stop();
           std::system("./main");
+          dev->start();
           printf("\nPhoto taken\n");
           changed = false;
         }
