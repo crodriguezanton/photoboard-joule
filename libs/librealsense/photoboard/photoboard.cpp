@@ -70,17 +70,14 @@ int main() try
     printf("    Firmware version: %s\n", dev->get_firmware_version());
 
     // Configure depth to run at VGA resolution at 30 frames per second
-    dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 
     std::vector<stream_record> supported_streams;
 
-    for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
-        if (dev->supports((rs::capabilities)i))
-            supported_streams.push_back(stream_record((rs::stream)i));
+    for (auto & stream_record : supported_streams)
+      dev->enable_stream(stream_record.stream, rs::preset::best_quality);
 
-    for (auto & stream_record : supported_streams) {
-      if (stream_record.stream != rs::stream::depth) dev->enable_stream(stream_record.stream, rs::preset::best_quality);
-    }
+    dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
+
 
     dev->start();
 
