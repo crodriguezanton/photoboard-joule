@@ -64,6 +64,7 @@ int main() try
             }
         }
         *out++ = 0;
+        std::system("clear");
         printf("\n%s", buffer);
     }
 
