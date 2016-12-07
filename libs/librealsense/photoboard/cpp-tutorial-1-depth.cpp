@@ -73,9 +73,9 @@ int main() try
               for(int & c : area_coverage)
               {
                 if (c > 100){
-                  *out2++ = "W";
+                  *out2++ = 'W';
                 } else {
-                  *out2++ = " ";
+                  *out2++ = ' ';
                 }
                   c = 0;
               }
@@ -86,7 +86,7 @@ int main() try
         *out2++ = 0;
         std::system("clear");
         printf("\n%s", buffer);
-        printf("\n%s", buffer2;
+        printf("\n%s", buffer2);
     }
 
     return EXIT_SUCCESS;
