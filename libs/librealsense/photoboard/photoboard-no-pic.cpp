@@ -102,6 +102,7 @@ int main() try
 
         if (changed){
           printf("\nPhoto taken\n");
+          changed = false;
         }
 
     }
