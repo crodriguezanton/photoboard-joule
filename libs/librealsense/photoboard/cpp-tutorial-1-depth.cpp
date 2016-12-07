@@ -28,7 +28,9 @@ int main() try
     dev->start();
 
     // Determine depth value corresponding to one meter
-    const uint16_t one_meter = static_cast<uint16_t>(5.0f / dev->get_depth_scale());
+    const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
+    const uint16_t end_zone = static_cast<uint16_t>(2f / dev->get_depth_scale());
+
 
     while(true)
     {
@@ -48,7 +50,7 @@ int main() try
             for(int x=0; x<640; ++x)
             {
                 int depth = *depth_frame++;
-                if(depth > 0 && depth < one_meter) ++coverage[x/10];
+                if(depth > 0 && depth < end_zone && depth > start_zone) ++coverage[x/10];
             }
 
             if(y%20 == 19)
@@ -64,7 +66,7 @@ int main() try
         *out++ = 0;
         printf("\n%s", buffer);
     }
-    
+
     return EXIT_SUCCESS;
 }
 catch(const rs::error & e)
