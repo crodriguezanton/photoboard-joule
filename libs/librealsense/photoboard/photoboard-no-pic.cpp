@@ -28,8 +28,8 @@ int main() try
     dev->start();
 
     // Determine depth value corresponding to one meter
-    const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
-    const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
+    const uint16_t start_zone = static_cast<uint16_t>(1.0f / dev->get_depth_scale());
+    const uint16_t end_zone = static_cast<uint16_t>(3.0f / dev->get_depth_scale());
 
     int i = 0;
     bool changed = true;
@@ -51,7 +51,8 @@ int main() try
         char * out2 = buffer2;
         char * out3 = buffer3;
         int coverage[64] = {};
-        int area_coverage[8] = {};
+        int area_coverage[6][8] = {};
+
         for(int y=0; y<480; ++y)
         {
             for(int x=0; x<640; ++x)
@@ -59,7 +60,7 @@ int main() try
                 int depth = *depth_frame++;
                 if(depth > 0 && depth < end_zone && depth > start_zone) {
                   ++coverage[x/10];
-                  ++area_coverage[x/80];
+                  ++area_coverage[y/80][x/80];
                 }
             }
 
@@ -74,7 +75,7 @@ int main() try
             }
 
             if(y%80 == 79) {
-              for(int & c : area_coverage)
+              for(int & c : area_coverage[y/80])
               {
                 if (c > 100 || i < 30){
                   *out2++ = 'W';
