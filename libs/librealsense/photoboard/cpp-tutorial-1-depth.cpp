@@ -31,6 +31,7 @@ int main() try
     const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
     const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
 
+    int i = 0;
 
     while(true)
     {
@@ -74,7 +75,7 @@ int main() try
             if(y%80 == 79) {
               for(int & c : area_coverage)
               {
-                if (c > 100){
+                if (c > 100 || i < 30){
                   *out2++ = 'W';
                   if(*out3 == '.') *out3++ = '.';
                   else *out3++ = 'W';
@@ -91,6 +92,7 @@ int main() try
         *out++ = 0;
         *out2++ = 0;
         *out3++ = 0;
+        ++i;
         std::system("clear");
         printf("\n%s", buffer);
         printf("\n%s", buffer2);
