@@ -78,7 +78,7 @@ int main() try
             supported_streams.push_back(stream_record((rs::stream)i));
 
     for (auto & stream_record : supported_streams)
-      dev->enable_stream(stream_record.stream, 640, 480, rs::format::z16, 30);
+      dev->enable_stream(stream_record.stream, rs::preset::best_quality);
       //dev->enable_stream(stream_record.stream, rs::preset::best_quality);
 
     dev->start();
