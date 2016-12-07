@@ -73,7 +73,7 @@ int main() try
 
     std::vector<stream_record> supported_streams;
 
-    for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
+    for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::color; i++)
         if (dev->supports((rs::capabilities)i))
             supported_streams.push_back(stream_record((rs::stream)i));
 
