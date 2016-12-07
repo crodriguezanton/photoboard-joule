@@ -72,14 +72,6 @@ int main() try
     // Configure depth to run at VGA resolution at 30 frames per second
     dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 
-    dev->start();
-
-    // Determine depth value corresponding to one meter
-    const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
-    const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
-
-    bool changed = true;
-
     std::vector<stream_record> supported_streams;
 
     for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
@@ -90,8 +82,13 @@ int main() try
       if (stream_record.stream != rs::stream::depth) dev->enable_stream(stream_record.stream, rs::preset::best_quality);
     }
 
+    dev->start();
 
+    // Determine depth value corresponding to one meter
+    const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
+    const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
 
+    bool changed = true;
 
 
     /* retrieve actual frame size for each enabled stream*/
