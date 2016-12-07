@@ -86,8 +86,12 @@ int main() try
         if (dev->supports((rs::capabilities)i))
             supported_streams.push_back(stream_record((rs::stream)i));
 
-    for (auto & stream_record : supported_streams)
-        dev->enable_stream(stream_record.stream, rs::preset::best_quality);
+    for (auto & stream_record : supported_streams) {
+      if (stream_record.stream != rs::stream::depth) dev->enable_stream(stream_record.stream, rs::preset::best_quality);
+    }
+
+
+
 
 
     /* retrieve actual frame size for each enabled stream*/

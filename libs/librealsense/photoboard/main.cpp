@@ -117,6 +117,7 @@ int main() try
     }
 
     printf("wrote frames to current working directory.\n");
+    dev->stop();
     return EXIT_SUCCESS;
 }
 catch(const rs::error & e)
