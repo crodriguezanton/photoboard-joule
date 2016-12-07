@@ -81,6 +81,7 @@ int main() try
       dev->enable_stream(stream_record.stream, rs::preset::best_quality);
 
     dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
+    dev->enable_stream(rs::stream::infrared, 640, 480, rs::format::z16, 30);
 
 
     dev->start();
