@@ -75,7 +75,7 @@ int main() try
                 if (c > 100){
                   *out2++ = 'W';
                 } else {
-                  *out2++ = ' ';
+                  *out2++ = '.';
                 }
                   c = 0;
               }
