@@ -73,6 +73,10 @@ int main() try
 
     std::vector<stream_record> supported_streams;
 
+    for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
+        if (dev->supports((rs::capabilities)i))
+            supported_streams.push_back(stream_record((rs::stream)i));
+
     for (auto & stream_record : supported_streams)
       dev->enable_stream(stream_record.stream, rs::preset::best_quality);
 
@@ -161,7 +165,7 @@ int main() try
         printf("\n\n%s", buffer3);
 
         if (changed){
-
+          printf("\nchanged\n");
           /* Retrieve data from all the enabled streams */
           for (auto & stream_record : supported_streams){
             printf("iteration\n");
