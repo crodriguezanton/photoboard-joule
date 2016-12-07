@@ -32,6 +32,7 @@ int main() try
     const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
 
     int i = 0;
+    bool changed = true;
 
     while(true)
     {
@@ -80,6 +81,7 @@ int main() try
                   if(*out3 == '.') *out3++ = '.';
                   else *out3++ = 'W';
                 } else {
+                  if(*out3 == 'W') changed = true;
                   *out2++ = '.';
                   *out3++ = '.';
                 }
@@ -97,6 +99,13 @@ int main() try
         printf("\n%s", buffer);
         printf("\n%s", buffer2);
         printf("\n\n%s", buffer3);
+
+        if (changed){
+          exec("./main");
+          printf("\nPhoto taken\n");
+          changed = false;
+        }
+
     }
 
     return EXIT_SUCCESS;
@@ -107,4 +116,16 @@ catch(const rs::error & e)
     printf("rs::error was thrown when calling %s(%s):\n", e.get_failed_function().c_str(), e.get_failed_args().c_str());
     printf("    %s\n", e.what());
     return EXIT_FAILURE;
+}
+
+std::string exec(const char* cmd) {
+    char buffer[128];
+    std::string result = "";
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    while (!feof(pipe.get())) {
+        if (fgets(buffer, 128, pipe.get()) != NULL)
+            result += buffer;
+    }
+    return result;
 }
