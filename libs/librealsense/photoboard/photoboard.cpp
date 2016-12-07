@@ -8,6 +8,53 @@
 // First include the librealsense C++ header file
 #include <librealsense/rs.hpp>
 #include <cstdio>
+#include <stdint.h>
+#include <vector>
+#include <map>
+#include <limits>
+#include <iostream>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "third_party/stb_image_write.h"
+
+void normalize_depth_to_rgb(uint8_t rgb_image[], const uint16_t depth_image[], int width, int height)
+{
+    for (int i = 0; i < width * height; ++i)
+    {
+        if (auto d = depth_image[i])
+        {
+            uint8_t v = d * 255 / std::numeric_limits<uint16_t>::max();
+            rgb_image[i*3 + 0] = 255 - v;
+            rgb_image[i*3 + 1] = 255 - v;
+            rgb_image[i*3 + 2] = 255 - v;
+        }
+        else
+        {
+            rgb_image[i*3 + 0] = 0;
+            rgb_image[i*3 + 1] = 0;
+            rgb_image[i*3 + 2] = 0;
+        }
+    }
+}
+
+std::map<rs::stream,int> components_map =
+{
+    { rs::stream::depth,     3  },      // RGB
+    { rs::stream::color,     3  },
+    { rs::stream::infrared , 1  },      // Monochromatic
+    { rs::stream::infrared2, 1  },
+    { rs::stream::fisheye,   1  }
+};
+
+struct stream_record
+{
+    stream_record(void): frame_data(nullptr) {};
+    stream_record(rs::stream value): stream(value), frame_data(nullptr) {};
+    ~stream_record() { frame_data = nullptr;}
+    rs::stream          stream;
+    rs::intrinsics      intrinsics;
+    unsigned char   *   frame_data;
+};
 
 int main() try
 {
@@ -31,8 +78,24 @@ int main() try
     const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
     const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
 
-    int i = 0;
     bool changed = true;
+
+    std::vector<stream_record> supported_streams;
+
+    for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
+        if (dev->supports((rs::capabilities)i))
+            supported_streams.push_back(stream_record((rs::stream)i));
+
+    for (auto & stream_record : supported_streams)
+        dev->enable_stream(stream_record.stream, rs::preset::best_quality);
+
+
+    /* retrieve actual frame size for each enabled stream*/
+    for (auto & stream_record : supported_streams)
+        stream_record.intrinsics = dev->get_stream_intrinsics(stream_record.stream);
+
+
+    for (int i = 0; i < 30; ++i) dev->wait_for_frames();
 
     while(true)
     {
@@ -76,7 +139,7 @@ int main() try
             if(y%80 == 79) {
               for(int & c : area_coverage)
               {
-                if (c > 100 || i < 30){
+                if (c > 100){
                   *out2++ = 'W';
                   if(*out3 == '.') *out3++ = '.';
                   else *out3++ = 'W';
@@ -101,11 +164,38 @@ int main() try
         printf("\n\n%s", buffer3);
 
         if (changed){
-          dev->stop();
-          std::system("./main");
-          getchar();
-          dev->start();
-          printf("\nPhoto taken\n");
+
+          /* Retrieve data from all the enabled streams */
+          for (auto & stream_record : supported_streams)
+              stream_record.frame_data = const_cast<uint8_t *>((const uint8_t*)dev->get_frame_data(stream_record.stream));
+
+          /* Transform Depth range map into color map */
+          stream_record depth = supported_streams[(int)rs::stream::depth];
+          std::vector<uint8_t> coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
+
+          /* Encode depth data into color image */
+          normalize_depth_to_rgb(coloredDepth.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
+
+          /* Update captured data */
+          supported_streams[(int)rs::stream::depth].frame_data = coloredDepth.data();
+
+          /* Store captured frames into current directory */
+          for (auto & captured : supported_streams)
+          {
+              std::stringstream ss;
+              ss << "photoboard-image-" << captured.stream << ".png";
+
+              std::cout << "Writing " << ss.str().data() << ", " << captured.intrinsics.width << " x " << captured.intrinsics.height << " pixels"   << std::endl;
+
+              stbi_write_png(ss.str().data(),
+                  captured.intrinsics.width,captured.intrinsics.height,
+                  components_map[captured.stream],
+                  captured.frame_data,
+                  captured.intrinsics.width * components_map[captured.stream] );
+          }
+
+          printf("wrote frames to current working directory.\n");
+
           changed = false;
         }
 
