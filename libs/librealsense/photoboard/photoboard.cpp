@@ -97,6 +97,8 @@ int main() try
 
     for (int i = 0; i < 30; ++i) dev->wait_for_frames();
 
+    int i = 0;
+
     while(true)
     {
         // This call waits until a new coherent set of frames is available on a device
@@ -187,7 +189,7 @@ int main() try
           {
               printf("5");
               std::stringstream ss;
-              ss << "photoboard-image-" << captured.stream << ".png";
+              ss << "photoboard-image-" << captured.stream << "-"<< i++ <<".png";
 
               printf("6");
 
