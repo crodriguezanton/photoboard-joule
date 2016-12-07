@@ -29,7 +29,7 @@ int main() try
 
     // Determine depth value corresponding to one meter
     const uint16_t start_zone = static_cast<uint16_t>(1.5f / dev->get_depth_scale());
-    const uint16_t end_zone = static_cast<uint16_t>(2f / dev->get_depth_scale());
+    const uint16_t end_zone = static_cast<uint16_t>(2.0f / dev->get_depth_scale());
 
 
     while(true)
