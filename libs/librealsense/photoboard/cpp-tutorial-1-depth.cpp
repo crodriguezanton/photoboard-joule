@@ -43,14 +43,20 @@ int main() try
 
         // Print a simple text-based representation of the image, by breaking it into 10x20 pixel regions and and approximating the coverage of pixels within one meter
         char buffer[(640/10+1)*(480/20)+1];
+        char buffer2[(640/80+1)*(480/80)+1];
         char * out = buffer;
+        char * out2 = buffer2;
         int coverage[64] = {};
+        int area_coverage[8] = {};
         for(int y=0; y<480; ++y)
         {
             for(int x=0; x<640; ++x)
             {
                 int depth = *depth_frame++;
-                if(depth > 0 && depth < end_zone && depth > start_zone) ++coverage[x/10];
+                if(depth > 0 && depth < end_zone && depth > start_zone) {
+                  ++coverage[x/10];
+                  ++area_coverage[x/80];
+                }
             }
 
             if(y%20 == 19)
@@ -62,10 +68,25 @@ int main() try
                 }
                 *out++ = '\n';
             }
+
+            if(y%80 == 79) {
+              for(int & c : area_coverage)
+              {
+                if (c > 100){
+                  *out2++ = "W";
+                } else {
+                  *out2++ = " ";
+                }
+                  c = 0;
+              }
+              *out2++ = '\n';
+            }
         }
         *out++ = 0;
+        *out2++ = 0;
         std::system("clear");
         printf("\n%s", buffer);
+        printf("\n%s", buffer2;
     }
 
     return EXIT_SUCCESS;
