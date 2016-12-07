@@ -103,6 +103,7 @@ int main() try
         if (changed){
           dev->stop();
           std::system("./main");
+          getchar();
           dev->start();
           printf("\nPhoto taken\n");
           changed = false;
