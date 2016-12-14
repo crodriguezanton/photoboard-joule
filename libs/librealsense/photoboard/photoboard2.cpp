@@ -125,8 +125,9 @@ void takePhoto(rs::device * dev) {
   dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
   printf("\nEnabled Depth\n");
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
+  printf("\nSleep Start\n");
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  printf("\nSleep End\n");
 }
 
 int main() try
