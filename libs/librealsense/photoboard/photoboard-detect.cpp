@@ -36,7 +36,9 @@ int main() try
     int i = 0;
     bool changed = true;
 
-    do{
+    for (int i = 0; i < 30; ++i) dev->wait_for_frames();
+
+    //do{
         // This call waits until a new coherent set of frames is available on a device
         // Calls to get_frame_data(...) and get_frame_timestamp(...) on a device will return stable values until wait_for_frames(...) is called
         dev->wait_for_frames();
@@ -78,7 +80,7 @@ int main() try
 
               for(int & c : area_coverage[y/80])
               {
-                if (c > 100 || i < 30){
+                if (c > 100){
                   *out2++ = 'W';
                   file << "W";
                 } else {
@@ -102,7 +104,7 @@ int main() try
           printf("\nPhoto taken\n");
         }
 
-    } while (i<20);
+    //} while (i<20);
 
     file.close();
 
