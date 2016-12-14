@@ -60,7 +60,7 @@ int main() try
         char buffer3[(640/80+1)*(480/80)+1];
         char * out = buffer;
         char * out2 = buffer2;
-        char * out3 = buffer3;
+        std::string out3;
         int coverage[64] = {};
         int area_coverage[6][8] = {};
 
@@ -94,7 +94,7 @@ int main() try
                 if (c > 100 || i < 30){
                   *out2++ = 'W';
                   if(*out3 == '.') nfile << '.';
-                  else file << 'W';
+                  else nfile << 'W';
                 } else {
                   if(*out3 == 'W') changed = true;
                   *out2++ = '.';
