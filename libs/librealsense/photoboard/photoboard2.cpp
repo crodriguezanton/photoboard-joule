@@ -61,13 +61,14 @@ void configureDepthStream(rs::device * dev, std::vector<stream_record> supported
 
   for (auto & stream_record : supported_streams)
       dev->disable_stream(stream_record.stream);
-
+  printf("\nDisabled All Streams\n");
   dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
+  printf("\nEnabled Depth\n");
 }
 
 void takePhoto(rs::device * dev) {
 
-  printf("\nPhoto taken\n");
+  printf("\nTaking photo\n");
 
   dev->stop();
 
@@ -120,7 +121,7 @@ void takePhoto(rs::device * dev) {
           captured.intrinsics.width * components_map[captured.stream] );
   }
 
-  printf("wrote frames to current working directory.\n");
+  printf("\n Photo taken\n");
   dev->stop();
 
   configureDepthStream(dev, supported_streams);
