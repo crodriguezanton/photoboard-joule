@@ -30,25 +30,15 @@ int main() try
     const uint16_t start_zone = static_cast<uint16_t>(1.0f / dev->get_depth_scale());
     const uint16_t end_zone = static_cast<uint16_t>(3.0f / dev->get_depth_scale());
 
-    ofstream nfile;
-    ifstream ofile;
-    nfile.open("photoboard.txt");
-    ofile.open("photoboard.txt");
-
-    if(!ofile){
-      nfile << "WWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\n";
-      nfile.close();
-      ofile.open("photoboard.txt");
-      nfile.open("photoboard.txt");
-    }
+    ofstream file;
+    file.open("photoboard.txt");
 
     int i = 0;
     bool changed = true;
 
     for (int i = 0; i < 30; ++i) dev->wait_for_frames();
 
-    do
-    {
+    //do{
         // This call waits until a new coherent set of frames is available on a device
         // Calls to get_frame_data(...) and get_frame_timestamp(...) on a device will return stable values until wait_for_frames(...) is called
         dev->wait_for_frames();
@@ -62,8 +52,6 @@ int main() try
         char buffer3[(640/80+1)*(480/80)+1];
         char * out = buffer;
         char * out2 = buffer2;
-        string::iterator out3;
-        std::string str;
         int coverage[64] = {};
         int area_coverage[6][8] = {};
 
@@ -89,26 +77,20 @@ int main() try
             }
 
             if(y%80 == 79) {
-              getline(ofile, str);
-              out3 = str.begin();
-              printf("%s\n", out3);
 
               for(int & c : area_coverage[y/80])
               {
                 if (c > 100 || i < 30){
                   *out2++ = 'W';
-                  if(*out3 == '.') nfile << '.';
-                  else nfile << 'W';
+                  file << "W";
                 } else {
-                  if(*out3 == 'W') changed = true;
                   *out2++ = '.';
-                  nfile << '.';
+                  file << ".";
                 }
-                *out3++;
 
               }
               *out2++ = '\n';
-              nfile << '\n';
+              file << '\n';
             }
         }
         *out++ = 0;
@@ -118,11 +100,13 @@ int main() try
         printf("\n%s", buffer);
         printf("\n%s", buffer2);
 
+        file.close();
+
         if (changed){
           printf("\nPhoto taken\n");
         }
 
-    } while (!changed);
+    //} while (!changed);
 
     return EXIT_SUCCESS;
 }
