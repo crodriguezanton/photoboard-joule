@@ -33,7 +33,7 @@ int main() try
     ofstream nfile;
     ifstream ofile;
     nfile.open("photoboard.txt");
-    ofile.open("photoboard.txt")
+    ofile.open("photoboard.txt");
 
     if(!ofile){
       nfile << "WWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\n";
