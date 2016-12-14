@@ -14,6 +14,8 @@
 #include <limits>
 #include <iostream>
 #include <unistd.h>
+#include <thread>
+#include <chrono>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "third_party/stb_image_write.h"
@@ -122,10 +124,12 @@ void takePhoto(rs::device * dev) {
   }
 
   printf("\n Photo taken\n");
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   dev->stop();
 
   configureDepthStream(dev, supported_streams);
 
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   dev->start();
 
 }
