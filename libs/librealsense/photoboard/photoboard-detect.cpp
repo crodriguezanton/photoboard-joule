@@ -7,6 +7,7 @@
 #include <fstream>
 using namespace std;
 #include <string>
+#include <boost/filesystem.hpp>
 
 int main() try
 {
@@ -34,7 +35,7 @@ int main() try
     ifstream ofile;
     nfile.open("photoboard.txt");
 
-    if(!std::filesystem::exists("photoboard.txt")){
+    if(!boost::filesystem::exists("photoboard.txt")){
       nfile << "WWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\n";
       nfile.close();
       nfile.open("photoboard.txt");
