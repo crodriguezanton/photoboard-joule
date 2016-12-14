@@ -71,9 +71,11 @@ void takePhoto(rs::device * dev) {
 
   dev->stop();
 
+  dev->enable_stream(rs::stream::depth);
+
   std::vector<stream_record> supported_streams;
 
-  for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
+  for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::color; i++)
       if (dev->supports((rs::capabilities)i))
           supported_streams.push_back(stream_record((rs::stream)i));
 
@@ -156,7 +158,18 @@ int main() try
     {
         // This call waits until a new coherent set of frames is available on a device
         // Calls to get_frame_data(...) and get_frame_timestamp(...) on a device will return stable values until wait_for_frames(...) is called
-        dev->wait_for_frames();
+        bool error;
+        do{
+          try{
+            dev->wait_for_frames();
+            error = false;
+          } catch(const rs::error & e) {
+            printf("rs::error was thrown when calling %s(%s):\n", e.get_failed_function().c_str(), e.get_failed_args().c_str());
+            printf("    %s\n", e.what());
+            error = true;
+          }
+        } while (error);
+
 
         // Retrieve depth data, which was previously configured as a 640 x 480 image of 16-bit depth values
         const uint16_t * depth_frame = reinterpret_cast<const uint16_t *>(dev->get_frame_data(rs::stream::depth));
