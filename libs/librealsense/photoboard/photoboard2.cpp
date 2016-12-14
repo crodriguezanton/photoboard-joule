@@ -57,6 +57,13 @@ struct stream_record
     unsigned char   *   frame_data;
 };
 
+void takePhoto(rs::device * dev) {
+
+  printf("\nPhoto taken\n");
+  usleep(5000);
+
+}
+
 int main() try
 {
     // Create a context object. This object owns the handles to all connected realsense devices.
@@ -164,11 +171,4 @@ catch(const rs::error & e)
     printf("rs::error was thrown when calling %s(%s):\n", e.get_failed_function().c_str(), e.get_failed_args().c_str());
     printf("    %s\n", e.what());
     return EXIT_FAILURE;
-}
-
-void takePhoto(rs::device * dev) {
-
-  printf("\nPhoto taken\n");
-  usleep(5000);
-
 }
