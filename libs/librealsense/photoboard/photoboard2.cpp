@@ -59,15 +59,6 @@ struct stream_record
     unsigned char   *   frame_data;
 };
 
-void configureDepthStream(rs::device * dev, std::vector<stream_record> supported_streams){
-
-  for (auto & stream_record : supported_streams)
-      dev->disable_stream(stream_record.stream);
-  printf("\nDisabled All Streams\n");
-  dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
-  printf("\nEnabled Depth\n");
-}
-
 void takePhoto(rs::device * dev) {
 
   printf("\nTaking photo\n");
@@ -127,7 +118,11 @@ void takePhoto(rs::device * dev) {
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   dev->stop();
 
-  configureDepthStream(dev, supported_streams);
+  for (auto & stream_record : supported_streams)
+      dev->disable_stream(stream_record.stream);
+  printf("\nDisabled All Streams\n");
+  dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
+  printf("\nEnabled Depth\n");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   dev->start();
