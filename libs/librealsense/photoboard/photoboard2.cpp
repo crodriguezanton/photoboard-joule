@@ -57,6 +57,14 @@ struct stream_record
     unsigned char   *   frame_data;
 };
 
+void configureDepthStream(rs::device * dev, std::vector<stream_record> supported_streams){
+
+  for (auto & stream_record : supported_streams)
+      dev->distable_stream(stream_record.stream);
+
+  dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
+}
+
 void takePhoto(rs::device * dev) {
 
   printf("\nPhoto taken\n");
@@ -113,18 +121,10 @@ void takePhoto(rs::device * dev) {
   printf("wrote frames to current working directory.\n");
   dev->stop();
 
-  configureDepthStream();
+  configureDepthStream(dev, supported_streams);
 
   dev->start();
 
-}
-
-void configureDepthStream(){
-
-  for (auto & stream_record : supported_streams)
-      dev->distable_stream(stream_record.stream);
-
-  dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 }
 
 int main() try
