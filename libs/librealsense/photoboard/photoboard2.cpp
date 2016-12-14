@@ -121,11 +121,11 @@ void takePhoto(rs::device * dev) {
   for (auto & stream_record : supported_streams)
       dev->disable_stream(stream_record.stream);
   printf("\nDisabled All Streams\n");
+
   dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
   printf("\nEnabled Depth\n");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  dev->start();
 
 }
 
@@ -145,7 +145,7 @@ int main() try
     // Configure depth to run at VGA resolution at 30 frames per second
     dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 
-    dev->start();
+
 
     // Determine depth value corresponding to one meter
     const uint16_t start_zone = static_cast<uint16_t>(1.0f / dev->get_depth_scale());
@@ -156,6 +156,7 @@ int main() try
 
     while(true)
     {
+        dev->start();
         // This call waits until a new coherent set of frames is available on a device
         // Calls to get_frame_data(...) and get_frame_timestamp(...) on a device will return stable values until wait_for_frames(...) is called
         bool error;
