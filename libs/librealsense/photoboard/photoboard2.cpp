@@ -60,8 +60,71 @@ struct stream_record
 void takePhoto(rs::device * dev) {
 
   printf("\nPhoto taken\n");
-  usleep(5000);
 
+  dev->stop();
+
+  std::vector<stream_record> supported_streams;
+
+  for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::fish_eye; i++)
+      if (dev->supports((rs::capabilities)i))
+          supported_streams.push_back(stream_record((rs::stream)i));
+
+  for (auto & stream_record : supported_streams)
+      dev->enable_stream(stream_record.stream, rs::preset::best_quality);
+
+  /* activate video streaming */
+  dev->start();
+
+  for (auto & stream_record : supported_streams)
+      stream_record.intrinsics = dev->get_stream_intrinsics(stream_record.stream);
+
+  /* Capture 30 frames to give autoexposure, etc. a chance to settle */
+  for (int i = 0; i < 30; ++i) dev->wait_for_frames();
+
+  /* Retrieve data from all the enabled streams */
+  for (auto & stream_record : supported_streams)
+      stream_record.frame_data = const_cast<uint8_t *>((const uint8_t*)dev->get_frame_data(stream_record.stream));
+
+  /* Transform Depth range map into color map */
+  stream_record depth = supported_streams[(int)rs::stream::depth];
+  std::vector<uint8_t> coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
+
+  /* Encode depth data into color image */
+  normalize_depth_to_rgb(coloredDepth.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
+
+  /* Update captured data */
+  supported_streams[(int)rs::stream::depth].frame_data = coloredDepth.data();
+
+  /* Store captured frames into current directory */
+  for (auto & captured : supported_streams)
+  {
+      std::stringstream ss;
+      ss << "photoboard-image-" << captured.stream << ".png";
+
+      std::cout << "Writing " << ss.str().data() << ", " << captured.intrinsics.width << " x " << captured.intrinsics.height << " pixels"   << std::endl;
+
+      stbi_write_png(ss.str().data(),
+          captured.intrinsics.width,captured.intrinsics.height,
+          components_map[captured.stream],
+          captured.frame_data,
+          captured.intrinsics.width * components_map[captured.stream] );
+  }
+
+  printf("wrote frames to current working directory.\n");
+  dev->stop();
+
+  configureDepthStream();
+
+  dev->start();
+
+}
+
+void configureDepthStream(){
+
+  for (auto & stream_record : supported_streams)
+      dev->distable_stream(stream_record.stream);
+
+  dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 }
 
 int main() try
