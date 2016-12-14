@@ -60,7 +60,7 @@ struct stream_record
 void configureDepthStream(rs::device * dev, std::vector<stream_record> supported_streams){
 
   for (auto & stream_record : supported_streams)
-      dev->distable_stream(stream_record.stream);
+      dev->disable_stream(stream_record.stream);
 
   dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 30);
 }
