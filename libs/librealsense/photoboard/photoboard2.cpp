@@ -71,7 +71,7 @@ void takePhoto(rs::device * dev) {
 
   dev->stop();
 
-  dev->enable_stream(rs::stream::depth);
+  dev->disable_stream(rs::stream::depth);
 
   std::vector<stream_record> supported_streams;
 
