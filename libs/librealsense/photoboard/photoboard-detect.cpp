@@ -60,7 +60,8 @@ int main() try
         char buffer3[(640/80+1)*(480/80)+1];
         char * out = buffer;
         char * out2 = buffer2;
-        std::string out3;
+        string::iterator out3;
+        std::string str;
         int coverage[64] = {};
         int area_coverage[6][8] = {};
 
@@ -86,7 +87,8 @@ int main() try
             }
 
             if(y%80 == 79) {
-              getline(ofile, out3);
+              getline(ofile, str);
+              out3 = str.begin();
               printf("%s\n", out3);
 
               for(int & c : area_coverage[y/80])
