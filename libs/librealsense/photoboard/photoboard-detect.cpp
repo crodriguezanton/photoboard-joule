@@ -36,9 +36,7 @@ int main() try
     int i = 0;
     bool changed = true;
 
-    for (int i = 0; i < 30; ++i) dev->wait_for_frames();
-
-    //do{
+    do{
         // This call waits until a new coherent set of frames is available on a device
         // Calls to get_frame_data(...) and get_frame_timestamp(...) on a device will return stable values until wait_for_frames(...) is called
         dev->wait_for_frames();
@@ -100,13 +98,13 @@ int main() try
         printf("\n%s", buffer);
         printf("\n%s", buffer2);
 
-        file.close();
-
         if (changed){
           printf("\nPhoto taken\n");
         }
 
-    //} while (!changed);
+    } while (i<20);
+
+    file.close();
 
     return EXIT_SUCCESS;
 }
