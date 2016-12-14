@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+using namespace std;
 #include <string>
 
 int main() try
@@ -29,13 +30,14 @@ int main() try
     const uint16_t start_zone = static_cast<uint16_t>(1.0f / dev->get_depth_scale());
     const uint16_t end_zone = static_cast<uint16_t>(3.0f / dev->get_depth_scale());
 
-    ofstream file;
-    file.open('photoboard.txt');
+    ofstream nfile;
+    ifstream ofile;
+    nfile.open("photoboard.txt");
 
-    if(!std::exists("photoboard.txt")){
-      file << "WWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\n";
-      file.close();
-      file.open('photoboard.txt');
+    if(!std::filesystem::exists("photoboard.txt")){
+      nfile << "WWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\nWWWWWWWW\n";
+      nfile.close();
+      nfile.open("photoboard.txt");
     }
 
     int i = 0;
@@ -84,25 +86,25 @@ int main() try
             }
 
             if(y%80 == 79) {
-              char * out3 = getline(myfile, line);
+              getline(ofile, out3);
               printf("%s\n", out3);
 
               for(int & c : area_coverage[y/80])
               {
                 if (c > 100 || i < 30){
                   *out2++ = 'W';
-                  if(*out3 == '.') file << '.';
+                  if(*out3 == '.') nfile << '.';
                   else file << 'W';
                 } else {
                   if(*out3 == 'W') changed = true;
                   *out2++ = '.';
-                  file << '.';
+                  nfile << '.';
                 }
                 *out3++;
 
               }
               *out2++ = '\n';
-              file << '\n';
+              nfile << '\n';
             }
         }
         *out++ = 0;
