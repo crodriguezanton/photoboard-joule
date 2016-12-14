@@ -69,7 +69,7 @@ void takePhoto(rs::device * dev) {
 
   std::vector<stream_record> supported_streams;
 
-  for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::color; i++)
+  for (int i=(int)rs::capabilities::depth; i <=(int)rs::capabilities::infrared2; i++)
       if (dev->supports((rs::capabilities)i))
           supported_streams.push_back(stream_record((rs::stream)i));
 
