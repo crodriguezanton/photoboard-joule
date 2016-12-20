@@ -18,3 +18,5 @@ while True:
 
     s.send("OK")
     s.close()
+
+    time.sleep(2)
