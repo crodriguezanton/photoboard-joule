@@ -120,9 +120,12 @@ int main() try
 
     dev->wait_for_frames();
 
-    stream_record depth = supported_streams[(int)rs::stream::depth];
-    std::vector<uint8_t> coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
+    for (auto & stream_record : supported_streams)
+        stream_record.frame_data = const_cast<uint8_t *>((const uint8_t*)dev->get_frame_data(stream_record.stream));
 
+    /* Transform Depth range map into color map */
+    depth = supported_streams[(int)rs::stream::depth];
+    coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
     /* Encode depth data into color image */
     normalize_depth_to_rgb(coloredDepth.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
 
