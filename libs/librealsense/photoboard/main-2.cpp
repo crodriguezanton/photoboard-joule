@@ -125,12 +125,12 @@ int main() try
 
     /* Transform Depth range map into color map */
     depth = supported_streams[(int)rs::stream::depth];
-    coloredDepth(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
+    std::vector<uint8_t> coloredDepth2(depth.intrinsics.width * depth.intrinsics.height * components_map[depth.stream]);
     /* Encode depth data into color image */
-    normalize_depth_to_rgb(coloredDepth.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
+    normalize_depth_to_rgb(coloredDepth2.data(), (const uint16_t *)depth.frame_data, depth.intrinsics.width, depth.intrinsics.height);
 
     /* Update captured data */
-    supported_streams[(int)rs::stream::depth].frame_data = coloredDepth.data();
+    supported_streams[(int)rs::stream::depth].frame_data = coloredDepth2.data();
 
     /* Store captured frames into current directory */
     for (auto & captured : supported_streams)
