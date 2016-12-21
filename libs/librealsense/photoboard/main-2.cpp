@@ -10,7 +10,6 @@
 #include <map>
 #include <limits>
 #include <iostream>
-#include <conio.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "third_party/stb_image_write.h"
@@ -117,7 +116,7 @@ int main() try
             captured.intrinsics.width * components_map[captured.stream] );
     }
 
-    getch();
+    getchar();
 
     dev->wait_for_frames();
 
