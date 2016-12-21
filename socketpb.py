@@ -1,5 +1,6 @@
 import socket
 import time
+import subprocess
 from dummypic import upload
 
 while True:
@@ -22,8 +23,6 @@ while True:
 
     s.send("OK")
     s.close()
-    print "Sleeping"
-    time.sleep(10)
-    print "Upload"
-    upload()
+    print "Taking picture"
+    return_code = subprocess.call("./picture.sh", shell=True)
     time.sleep(2)
